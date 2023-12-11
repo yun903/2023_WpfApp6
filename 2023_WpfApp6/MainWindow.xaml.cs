@@ -20,5 +20,10 @@ namespace _2023_WpfApp6
         {
             InitializeComponent();
         }
+
+        private void fetchButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
