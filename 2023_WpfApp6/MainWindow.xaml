@@ -5,8 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:_2023_WpfApp6"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="AQI空氣指標" Height="800" Width="1200">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="500*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="500*"/>
+        </Grid.ColumnDefinitions>
 
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Height="80" Width="Auto" Orientation="Horizontal">
+            <StackPanel Orientation="Vertical" Width="900">
+                <Label Content="每小時提供各測站之空氣品質指標（AQI），原始資料版本公告於空氣品質監測網https://airtw.moenv.gov.tw" Height="40" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="50, 0, 0, 0"/>
+                <TextBox x:Name="UrlTextBox" VerticalAlignment="Center" Height="40" Margin="50, 0, 0, 0" />
+            </StackPanel>
+            <Button x:Name="GetWebDataButton" Content="抓取資料" VerticalAlignment="Center" Height="40" Width="100" Margin="50, 0, 0, 0" Click="GetWebDataButton_Click"/>
+        </StackPanel>
+
+        <TextBox x:Name="ContentTextBox" Grid.Row="1" Grid.Column="0" Background="Beige"/>
+
+        <GridSplitter Grid.Row="1" Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Center"  Background="LightGray"/>
+
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
+            </Border>
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="LightGray"/>
+            <Border Grid.Row="2" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
+            </Border>
+            <Border Grid.Row="3" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
+            </Border>
+        </Grid>
+
+        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+            <StatusBarItem Margin="100, 0, 0, 0">
+                <TextBlock x:Name="StatusTextBlock" Text="Status" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
