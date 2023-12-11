@@ -1,6 +1,9 @@
-﻿using System.Net.Http;
+﻿using Microsoft.Win32;
+using System.Configuration;
+using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace _2023_WpfApp6
 {
@@ -35,6 +38,30 @@ namespace _2023_WpfApp6
         private void DisplayAQIData()
         {
             RecordDataGrid.ItemsSource = records;
+            DataWrapPanel.Children.Clear();
+
+            foreach (var field in fields)
+            {
+                var propertyInfo = typeof(Record).GetProperty(field.id);
+                if (propertyInfo != null)
+                {
+                    string value = propertyInfo.GetValue(records[0]) as string;
+                    if (double.TryParse(value, out double v))
+                    {
+                        CheckBox cb = new CheckBox
+                        {
+                            Content = field.info.label,
+                            Tag = field.id,
+                            Margin = new Thickness(5),
+                            Width = 120,
+                            FontSize = 14,
+                            FontWeight = FontWeights.Bold,
+                        };
+
+                        DataWrapPanel.Children.Add(cb);
+                    }
+                }
+            }
         }
 
         private async Task<string> FetchContentAsync(string url)
