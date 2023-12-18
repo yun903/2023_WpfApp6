@@ -40,7 +40,7 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
-                <DataGrid x:Name="RecordDataGrid" AutoGenerateColumns="True"/>
+                <DataGrid x:Name="RecordDataGrid" AutoGenerateColumns="True" LoadingRow="RecordDataGrid_LoadingRow" SelectionChanged="RecordDataGrid_SelectionChanged" IsReadOnly="True"/>
             </Border>
 
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="LightGray"/>
@@ -50,7 +50,11 @@
             </Border>
 
             <Border Grid.Row="3" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
-                <lvc:CartesianChart x:Name="AQIChart" MinWidth="500"/>
+                <lvc:CartesianChart x:Name="AQIChart" MinWidth="500">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="數值"/>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
             </Border>
         </Grid>
 

@@ -17,10 +17,12 @@ namespace _2023_WpfApp6
         List<Field> fields = new List<Field>();
         List<Record> records = new List<Record>();
         SeriesCollection seriesCollection = new SeriesCollection();
+        List<Record> selectedRecords = new List<Record>();
         public MainWindow()
         {
             InitializeComponent();
             UrlTextBox.Text = defaultURL;
+            selectedRecords.Clear();
         }
 
         private async void fetchButton_Click(object sender, RoutedEventArgs e)
@@ -33,6 +35,7 @@ namespace _2023_WpfApp6
             aqiData = JsonSerializer.Deserialize<AQIdata>(data);
             fields = aqiData.fields.ToList();
             records = aqiData.records.ToList();
+            selectedRecords = records;
             statusTextBlock.Text = $"共有 {records.Count} 筆資料，每筆資料有{fields.Count}個欄位。";
 
             DisplayAQIData();
@@ -83,7 +86,7 @@ namespace _2023_WpfApp6
                     ColumnSeries columnSeries=new ColumnSeries();
                     ChartValues<double> values = new ChartValues<double>();
 
-                    foreach(Record record in records)
+                    foreach(Record record in selectedRecords)
                     {
                         var propertyInfo = record.GetType().GetProperty(tag);
                         if (propertyInfo != null)
@@ -126,6 +129,17 @@ namespace _2023_WpfApp6
                     throw;
                 }
             }
+        }
+
+        private void RecordDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void RecordDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedRecords = RecordDataGrid.SelectedItems.Cast<Record>().ToList();
+            statusTextBlock.Text = $"總共選取{selectedRecords.Count}筆記錄";
         }
     }
 }
