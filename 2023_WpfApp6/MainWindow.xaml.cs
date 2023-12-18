@@ -16,11 +16,13 @@ namespace _2023_WpfApp6
         AQIdata aqidata = new AQIdata();
         List<Field> fields = new List<Field>();
         List<Record> records = new List<Record>();
+        List<Record> selectedRecords = new List<Record>();
         SeriesCollection seriesCollection = new SeriesCollection();
         public MainWindow()
         {
             InitializeComponent();
             UrlTextBox.Text = url;
+            selectedRecords.Clear();
         }
 
         private async void GetWebDataButton_Click(object sender, RoutedEventArgs e)
@@ -32,6 +34,7 @@ namespace _2023_WpfApp6
             aqidata = JsonSerializer.Deserialize<AQIdata>(jsontext);
             fields = aqidata.fields.ToList();
             records = aqidata.records.ToList();
+            selectedRecords = records;
             StatusTextBlock.Text = $"共有 {records.Count} 筆資料";
             DisplayAQIData();
         }
@@ -53,7 +56,7 @@ namespace _2023_WpfApp6
                         {
                             Content = field.info.label,
                             Tag = field.id,
-                            Margin = new Thickness(5),
+                            Margin = new Thickness(3),
                             Width = 120,
                             FontSize = 14,
                             FontWeight = FontWeights.Bold,
@@ -80,7 +83,7 @@ namespace _2023_WpfApp6
                     ChartValues<double> values = new ChartValues<double>();
                     List<String> labels = new List<String>();
 
-                    foreach (var record in records)
+                    foreach (var record in selectedRecords)
                     {
                         var propertyInfo = typeof(Record).GetProperty(tag);
                         if (propertyInfo != null)
@@ -115,6 +118,17 @@ namespace _2023_WpfApp6
             {
                 return $"發生錯誤: {ex.Message}";
             }
+        }
+
+        private void RecordDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedRecords = RecordDataGrid.SelectedItems.Cast<Record>().ToList();
+            StatusTextBlock.Text = $"共選取 {selectedRecords.Count} 筆資料";
+        }
+
+        private void RecordDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = e.Row.GetIndex() + 1;
         }
     }
 }

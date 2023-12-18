@@ -24,10 +24,10 @@
                 <Label Content="每小時提供各測站之空氣品質指標（AQI），原始資料版本公告於空氣品質監測網https://airtw.moenv.gov.tw" Height="40" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="50, 0, 0, 0"/>
                 <TextBox x:Name="UrlTextBox" VerticalAlignment="Center" Height="40" Margin="50, 0, 0, 0" TextWrapping="Wrap" VerticalContentAlignment="Center"/>
             </StackPanel>
-            <Button x:Name="GetWebDataButton" Content="抓取資料" VerticalAlignment="Center" Height="40" Width="100" Margin="50, 0, 0, 0" Click="GetWebDataButton_Click"/>
+            <Button x:Name="GetWebDataButton" Content="抓取資料" VerticalAlignment="Center" Height="40" Width="100" Margin="50, 0, 0, 0" Click="GetWebDataButton_Click" FontSize="14" FontWeight="Bold"/>
         </StackPanel>
 
-        <TextBox x:Name="ContentTextBox" Grid.Row="1" Grid.Column="0" Background="Beige"/>
+        <TextBox x:Name="ContentTextBox" Grid.Row="1" Grid.Column="0" Background="Beige" FontSize="14" FontFamily="Cascadia Code" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
         <GridSplitter Grid.Row="1" Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Center"  Background="LightGray"/>
 
@@ -39,7 +39,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
-                <DataGrid x:Name="RecordDataGrid" AutoGenerateColumns="True"/>
+                <DataGrid x:Name="RecordDataGrid" AutoGenerateColumns="True" SelectionChanged="RecordDataGrid_SelectionChanged" LoadingRow="RecordDataGrid_LoadingRow" IsReadOnly="True"/>
             </Border>
             <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="LightGray"/>
             <Border Grid.Row="2" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
@@ -47,7 +47,11 @@
                 </WrapPanel>
             </Border>
             <Border Grid.Row="3" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
-                <lvc:CartesianChart x:Name="AQIChart" MinWidth="500"/>
+                <lvc:CartesianChart x:Name="AQIChart" MinWidth="500">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="數值"/>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
             </Border>
         </Grid>
 
