@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:_2023_WpfApp6"
         mc:Ignorable="d"
         Title="AQI空氣指標" Height="800" Width="1200">
@@ -46,6 +47,7 @@
                 </WrapPanel>
             </Border>
             <Border Grid.Row="3" Margin="2, 2, 2, 2" BorderBrush="Red" BorderThickness="1">
+                <lvc:CartesianChart x:Name="AQIChart" MinWidth="500"/>
             </Border>
         </Grid>
 
