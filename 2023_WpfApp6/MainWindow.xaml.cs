@@ -1,15 +1,7 @@
 ﻿using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace _2023_WpfApp6
 {
@@ -39,6 +31,38 @@ namespace _2023_WpfApp6
             fields = aqiData.fields.ToList();
             records = aqiData.records.ToList();
             statusTextBlock.Text = $"共有 {records.Count} 筆資料，每筆資料有{fields.Count}個欄位。";
+
+            DisplayAQIData();
+        }
+
+        private void DisplayAQIData()
+        {
+            RecordDataGrid.ItemsSource = records;
+
+            Record record = records[0];
+            DataWrapPanel.Children.Clear();
+
+            foreach (Field field in fields)
+            {
+                var propertyInfo = record.GetType().GetProperty(field.id);
+                if (propertyInfo != null)
+                {
+                    var value = propertyInfo.GetValue(record) as string;
+                    if (double.TryParse(value, out double v))
+                    {
+                        CheckBox cb = new CheckBox
+                        {
+                            Content = field.info.label,
+                            Tag = field.id,
+                            Margin = new Thickness(3),
+                            FontSize = 14,
+                            FontWeight = FontWeights.Bold,
+                            Width = 120
+                        };
+                        DataWrapPanel.Children.Add(cb);
+                    }
+                }
+            }
         }
 
         private async Task<string> FetchContentAsync(string url)
