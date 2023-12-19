@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
+using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +16,8 @@ namespace _2023_WpfApp6
         AQIdata aqidata = new AQIdata();
         List<Field> fields = new List<Field>();
         List<Record> records = new List<Record>();
+        List<Record> selectedRecords = new List<Record>();
+        SeriesCollection seriesCollection = new SeriesCollection();
 
         public MainWindow()
         {
@@ -30,6 +34,7 @@ namespace _2023_WpfApp6
             aqidata = JsonSerializer.Deserialize<AQIdata>(jsonData);
             fields = aqidata.fields.ToList();
             records = aqidata.records.ToList();
+            selectedRecords = records;
             StatusTextBlock.Text = $"共有{records.Count} 筆資料";
             DisplayAQIData();
         }
@@ -58,18 +63,48 @@ namespace _2023_WpfApp6
                             FontWeight = FontWeights.Bold,
                             Width = 120
                         };
-                        cb.Checked += CheckBox_Checked;
+                        cb.Checked += UpdateChart;
+                        cb.Unchecked += UpdateChart;
                         DataWrapPanel.Children.Add(cb);
                     }
                 }
             }
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void UpdateChart(object sender, RoutedEventArgs e)
         {
-            var cb = sender as CheckBox;
+            seriesCollection.Clear();
 
-            MessageBox.Show($"{cb.Tag}");
+            foreach (CheckBox cb in DataWrapPanel.Children)
+            {
+                if (cb.IsChecked == true)
+                {
+                    List<String> labels = new List<String>();
+                    String? tag = cb.Tag.ToString();
+                    ColumnSeries columnSeries = new ColumnSeries();
+                    ChartValues<double> values = new ChartValues<double>();
+
+                    foreach (Record record in selectedRecords)
+                    {
+                        var propertyInfo = record.GetType().GetProperty(tag);
+                        if (propertyInfo != null)
+                        {
+                            String? value = propertyInfo.GetValue(record) as String;
+                            if (Double.TryParse(value, out double v))
+                            {
+                                values.Add(v);
+                                labels.Add(record.sitename);
+                            }
+                        }
+                    }
+                    columnSeries.Values = values;
+                    columnSeries.Title = tag;
+                    columnSeries.LabelPoint = point => $"{labels[(int)point.X]}: {point.Y.ToString()}";
+                    seriesCollection.Add(columnSeries);
+                }
+            }
+
+            AQIChart.Series = seriesCollection;
         }
 
         private async Task<string> FetchContentAsync(string url)
@@ -85,6 +120,17 @@ namespace _2023_WpfApp6
             {
                 return $"{ex.Message}";
             }
+        }
+
+        private void RecordDataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        private void RecordDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedRecords = RecordDataGrid.SelectedItems.Cast<Record>().ToList();
+            StatusTextBlock.Text = $"共選取 {selectedRecords.Count} 筆記錄";
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace _2023_WpfApp6
 {
+
     public class AQIdata
     {
         public Field[] fields { get; set; }
@@ -64,5 +65,4 @@
         public string latitude { get; set; }
         public string siteid { get; set; }
     }
-
 }
